@@ -1,0 +1,27 @@
+*copy-as-rtf.txt* Plugin for copying syntax highlighted text as RTF
+
+This plugin lets you select text or a buffer and copy it to the OS X
+clipboard as RTF text.
+
+Requirements:
+
+  * OS X
+  * The |:TOhtml| plugin, which comes with vim
+
+Commands:
+
+  *:CopyRTF*
+
+    Copies the current buffer or the selected text as RTF to the
+    clipboard.
+
+
+                                                         *copy-as-rtf-settings*
+
+This plugin doesn't have any settings. However, the |:TOhtml| plugin can
+be configured to change how text is converted before being converted to
+RTF. To set the font to match your MacVim or terminal settings, use this 
+(undocumented) setting:
+
+    let g:html_font="Your Favorite Console Font"
+
