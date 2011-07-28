@@ -9,6 +9,11 @@ This plugin was inspired by the
 but only uses commands available by default on OS X and an HTML
 conversion plugin that ships with vim.
 
+## Requirements
+
+* OS X
+* The `:TOhtml` plugin, which ships with vim and is enabled by default
+
 ## Installation
 
 Download and unpack the tarball.
@@ -24,4 +29,4 @@ After the command executes, the RTF text will be available on the
 system clipboard.
 
 For customization of how the text is generated, see the vim
-documentation for the :TOhtml command.
+documentation for the `:TOhtml` command.
