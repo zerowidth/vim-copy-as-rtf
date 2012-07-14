@@ -16,6 +16,13 @@ if !exists('g:copy_as_rtf_using_local_buffer')
   let g:copy_as_rtf_using_local_buffer = 0
 endif
 
+" Set this to 1 to preserve the indentation as-is when converting to RTF.
+" Otherwise, the selected lines are outdented as far as possible before
+" conversion.
+if !exists('g:copy_as_rtf_preserve_indent')
+  let g:copy_as_rtf_preserve_indent = 0
+endif
+
 if !executable('pbcopy') || !executable('textutil')
   echomsg 'cannot load copy-as-rtf plugin, not on a mac?'
   finish
@@ -37,7 +44,9 @@ function! s:CopyRTF(bufnr, line1, line2)
   if g:copy_as_rtf_using_local_buffer
     let lines = getline(a:line1, a:line2)
 
-    call s:RemoveCommonIndentation(a:line1, a:line2)
+    if !g:copy_as_rtf_preserve_indent
+      call s:RemoveCommonIndentation(a:line1, a:line2)
+    endif
     call tohtml#Convert2HTML(a:line1, a:line2)
     silent exe "%!textutil -convert rtf -stdin -stdout | pbcopy"
 
@@ -57,7 +66,9 @@ function! s:CopyRTF(bufnr, line1, line2)
     " copy the selection into the scratch buffer
     call setline(1, getbufline(a:bufnr, a:line1, a:line2))
 
-    call s:RemoveCommonIndentation(1, line('$'))
+    if !g:copy_as_rtf_preserve_indent
+      call s:RemoveCommonIndentation(1, line('$'))
+    endif
 
     call tohtml#Convert2HTML(a:line1, a:line2)
     silent exe "%!textutil -convert rtf -stdin -stdout | pbcopy"
