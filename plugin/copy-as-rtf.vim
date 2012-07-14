@@ -31,31 +31,14 @@ function! s:CopyRTF(line1,line2)
 endfunction
 
 " outdent selection to the least indented level
-function! s:RemoveCommonIndentation(line1,line2)
-  let lines = getline(a:line1, a:line2)
+function! s:RemoveCommonIndentation(line1, line2)
+  " normalize indentation
+  silent exe a:line1 . ',' . a:line2 . 'retab'
 
-  for line in lines
-    let indent_level = match(line, '\S')
-
-    if indent_level < 0
-      " blank line or whitespace
-      continue
-    elseif indent_level == 0
-      return
-    else
-      if exists('minimum_indent')
-        if minimum_indent > indent_level
-          let minimum_indent = indent_level
-        endif
-      else
-        let minimum_indent = indent_level
-      end
-    endif
-  endfor
-
-  let pattern = '\s\{'.minimum_indent.'}'
-  call map(lines, 'substitute(v:val, pattern, "", "")')
-  call setline(a:line1, lines)
+  let lines_with_code = filter(range(a:line1, a:line2), 'match(getline(v:val), ''\S'') >= 0')
+  let minimum_indent = min(map(lines_with_code, 'indent(v:val)'))
+  let pattern = '^\s\{' . minimum_indent . '}'
+  call setline(a:line1, map(getline(a:line1, a:line2), 'substitute(v:val, pattern, "", "")'))
 endfunction
 
 command! -range=% CopyRTF :call s:CopyRTF(<line1>,<line2>)
