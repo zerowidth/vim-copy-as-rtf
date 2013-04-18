@@ -70,7 +70,7 @@ function! s:CopyRTF(bufnr, line1, line2)
       call s:RemoveCommonIndentation(1, line('$'))
     endif
 
-    call tohtml#Convert2HTML(a:line1, a:line2)
+    call tohtml#Convert2HTML(1, line('$'))
     silent exe "%!textutil -convert rtf -stdin -stdout | pbcopy"
     silent bd!
     silent bd!
