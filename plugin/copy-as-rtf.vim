@@ -56,9 +56,15 @@ function! s:CopyRTF(bufnr, line1, line2)
 
     " open a new scratch buffer
     let orig_ft = &ft
+    let l:orig_bg = &background
+    let l:orig_nu = &number
+    let l:orig_nuw = &numberwidth
     new __copy_as_rtf__
     " enable the same syntax highlighting
     let &ft=orig_ft
+    let &background=l:orig_bg
+    let &number=l:orig_nu
+    let &numberwidth=l:orig_nuw
     set buftype=nofile
     set bufhidden=hide
     setlocal noswapfile
