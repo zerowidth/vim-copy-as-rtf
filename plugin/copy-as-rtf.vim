@@ -41,6 +41,9 @@ function! s:CopyRTF(bufnr, line1, line2)
     finish
   endif
 
+  " save the alternate file and restore it at the end
+  let l:alternate=bufnr(@#)
+
   if g:copy_as_rtf_using_local_buffer
     let lines = getline(a:line1, a:line2)
 
@@ -82,6 +85,7 @@ function! s:CopyRTF(bufnr, line1, line2)
     silent bd!
   endif
 
+  let @# = l:alternate
   echomsg "RTF copied to clipboard"
 endfunction
 
