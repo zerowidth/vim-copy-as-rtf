@@ -62,8 +62,14 @@ function! s:CopyRTF(bufnr, line1, line2)
     let l:orig_bg = &background
     let l:orig_nu = &number
     let l:orig_nuw = &numberwidth
+    if exists("b:is_bash")
+      let l:is_bash = b:is_bash
+    endif
     new __copy_as_rtf__
     " enable the same syntax highlighting
+    if exists("l:is_bash")
+      let b:is_bash=l:is_bash
+    endif
     let &ft=orig_ft
     let &background=l:orig_bg
     let &number=l:orig_nu
