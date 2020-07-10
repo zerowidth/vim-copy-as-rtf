@@ -1,5 +1,5 @@
-" Vim plugin for copying syntax highlighted code as RTF on OS X systems
-" Last Change: 2012-07-14
+" Vim plugin for copying syntax highlighted code as RTF on Windows/macOS/X11
+" Last Change: 2020-07-10
 " Maintainer:	Nathan Witmer <nwitmer@gmail.com>
 " License: WTFPL
 
@@ -23,8 +23,21 @@ if !exists('g:copy_as_rtf_preserve_indent')
   let g:copy_as_rtf_preserve_indent = 0
 endif
 
-if !executable('pbcopy') || !executable('textutil')
-  echomsg 'cannot load copy-as-rtf plugin, not on a mac?'
+if has('win32') && has('clipboard_working')
+  function s:Copy_as_RTF()
+    %yank *
+    silent exec '!start /min powershell -noprofile "gcb | scb -as"'
+  endfunction
+elseif has('osxdarwin') && executable('pbcopy') && executable('textutil')
+  function s:Copy_as_RTF()
+    silent exe '%!textutil -convert rtf -stdin -stdout | pbcopy'
+  endfunction
+elseif has('x11') && executable('xclip')
+  function s:Copy_as_RTF()
+    silent exe '%!xclip -selection clipboard -t "text/html" -i'
+  endfunction
+else
+  echomsg 'Cannot load copy-as-rtf plugin: unsupported platform'
   finish
 endif
 
@@ -51,7 +64,7 @@ function! s:CopyRTF(bufnr, line1, line2)
       call s:RemoveCommonIndentation(a:line1, a:line2)
     endif
     call tohtml#Convert2HTML(a:line1, a:line2)
-    silent exe "%!textutil -convert rtf -stdin -stdout | pbcopy"
+    call Copy_as_RTF()
 
     silent bd!
     silent call setline(a:line1, lines)
@@ -86,7 +99,7 @@ function! s:CopyRTF(bufnr, line1, line2)
     endif
 
     call tohtml#Convert2HTML(1, line('$'))
-    silent exe "%!textutil -convert rtf -stdin -stdout | pbcopy"
+    call s:Copy_as_RTF()
     silent bd!
     silent bd!
   endif
