@@ -28,13 +28,13 @@ if has('win32') && has('clipboard_working')
     %yank *
     silent exec '!start /min powershell -noprofile "gcb | scb -as"'
   endfunction
-elseif has('osxdarwin') && executable('pbcopy') && executable('textutil')
-  function s:Copy_as_RTF()
-    silent exe '%!textutil -convert rtf -stdin -stdout | pbcopy'
-  endfunction
 elseif has('x11') && executable('xclip')
   function s:Copy_as_RTF()
     silent exe '%!xclip -selection clipboard -t "text/html" -i'
+  endfunction
+elseif executable('pbcopy') && executable('textutil')
+  function s:Copy_as_RTF()
+    silent exe '%!textutil -convert rtf -stdin -stdout | pbcopy'
   endfunction
 else
   echomsg 'Cannot load copy-as-rtf plugin: unsupported platform'
