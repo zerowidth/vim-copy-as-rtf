@@ -23,7 +23,7 @@ if !exists('g:copy_as_rtf_preserve_indent')
   let g:copy_as_rtf_preserve_indent = 0
 endif
 
-if has('win32') && has('clipboard_working')
+if has('win32') && has('clipboard')
   function s:Copy_as_RTF()
     %yank *
     silent exec '!start /min powershell -noprofile "gcb | scb -as"'
