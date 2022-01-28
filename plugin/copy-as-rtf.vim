@@ -86,9 +86,12 @@ function! s:CopyRTF(bufnr, line1, line2)
     endif
 
     call tohtml#Convert2HTML(1, line('$'))
-    silent exe "%!textutil -convert rtf -stdin -stdout | pbcopy"
+    let filename = tempname() ".html"
+    silent exe ":w!" filename
+    silent exe "%!textutil -convert rtf -stdout " filename " | pbcopy"
     silent bd!
     silent bd!
+    call delete(filename)
   endif
 
   let @# = l:alternate
